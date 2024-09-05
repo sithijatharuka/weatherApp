@@ -53,5 +53,101 @@
         </div>
       </div>
     </div>
+
+    <script>
+      function callAPI() {
+        const city = document.getElementById("location-input").value;
+
+        if (!city) {
+          alert("Please enter a city, region, or country.");
+          return;
+        }
+
+        const apiURL = `https://api.weatherapi.com/v1/current.json?key=68738517a2424003883160111240509&q=${city}&aqi=yes`;
+        const apiUrlForecast = `https://api.weatherapi.com/v1/forecast.json?key=68738517a2424003883160111240509&q=${city}&days=3&aqi=no&alerts=no
+      `;
+
+        fetch(apiURL)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            document.getElementById(
+              "country"
+            ).innerText = `${data.location.country}`;
+
+            document.getElementById(
+              "temperatures"
+            ).innerText = `${data.current.temp_c}°C`;
+            document.getElementById(
+              "humiditys"
+            ).innerText = `${data.current.humidity}°C`;
+            document.getElementById(
+              "wind-speeds"
+            ).innerText = `${data.current.wind_kph}°C`;
+            document.getElementById(
+              "weather-descriptions"
+            ).innerText = `${data.current.condition.text}°C`;
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          });
+
+        callForecast();
+      }
+
+      function callForecast() {
+        const city = document.getElementById("location-input").value;
+
+        const apiUrlForecast = `https://api.weatherapi.com/v1/forecast.json?key=68738517a2424003883160111240509&q=${city}&days=3&aqi=no&alerts=no
+      `;
+
+        fetch(apiUrlForecast)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // day 1
+            document.getElementById(
+              "dt1"
+            ).innerText = `${data.forecast.forecastday[0].day.avgtemp_c}°C`;
+            document.getElementById(
+              "dc1"
+            ).innerText = `${data.forecast.forecastday[0].day.condition.text}°C`;
+
+            // day 2
+            document.getElementById(
+              "dt2"
+            ).innerText = `${data.forecast.forecastday[1].day.avgtemp_c}°C`;
+            document.getElementById(
+              "dc2"
+            ).innerText = `${data.forecast.forecastday[1].day.condition.text}°C`;
+
+            // day 3
+
+            document.getElementById(
+              "dt3"
+            ).innerText = `${data.forecast.forecastday[2].day.avgtemp_c}°C`;
+            document.getElementById(
+              "dc3"
+            ).innerText = `${data.forecast.forecastday[2].day.condition.text}°C`;
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          });
+      }
+    </script>
   </body>
 </html>
